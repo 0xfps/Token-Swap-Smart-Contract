@@ -12,7 +12,7 @@ Think about the future possibilities of this type of exchange. This contract eli
 
 ##
 
-**Deployed at:** https://rinkeby.etherscan.io/address/0x93a9b149A40490d03aA37de469105A8049932e30.
+**Deployed at:** .
 
 ---
 
