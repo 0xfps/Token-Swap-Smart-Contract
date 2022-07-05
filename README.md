@@ -18,7 +18,3 @@ Open and find out 😉.
 ##
 
 **Deployed at:** https://rinkeby.etherscan.io/address/0xF80c68C076bFDFef4bDE35BD492eF0967a9528D7.
-
----
-
-Nnaemeka.
