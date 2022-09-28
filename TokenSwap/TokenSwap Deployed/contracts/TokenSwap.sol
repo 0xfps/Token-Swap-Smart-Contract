@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >0.6.0;
+
 import "./Interfaces/IERC20.sol";
 
 /*
  * @title: 
- * @author: Anthony (fps) https://github.com/fps8k.
+ * @author: Anthony (fps) https://github.com/0xfps.
  * @dev: 
  * The contract below demonstrate a swap of two tokens between two parties at the same time (atomic).
  *
@@ -17,9 +18,7 @@ import "./Interfaces/IERC20.sol";
  *
  * Can we make this contract more open?
 */
-
-contract TokenSwap
-{
+contract TokenSwap {
     /*
     * @dev: Struct:: Pair.
     *
@@ -29,78 +28,55 @@ contract TokenSwap
     * - The users preferred `partners`.
     * - `allowed`, which is true if the `parter` has accepted the pair with the owner.
     */
-
-    struct Pair
-    {
+    struct Pair {
         IERC20 token;
         address partner;
         bool allowed;
     }
-
 
     /*
     * @dev: Mapping:: partners.
     *
     * mapping an the `msg.sender`'s address to his own Pair struct.
     */
-
     mapping(address => Pair) public partners;
-
 
     /*
     * @dev: Events.
     *
     * Emitted on specific functions.
     */
-
     event RegisterPair(address, address, address);  // Owner, token, partner.
-
-
-
 
     /*
     * @dev: Modifier isValidSender.
     *
     * Requires that the `msg.sender` is not a 0 address.
     */
-
-    modifier isValidSender()
-    {
+    modifier isValidSender() {
         require(msg.sender != address(0), "Not a valid sender.");
         _;
     }
-
-
-
 
     /*
     * @devL initiateToken(address __token).
     *
     * Initialized a new token for the person who choses to register a new pair.
     */
-    function initiateToken(address __token) private pure returns(IERC20 initalized_token)
-    {
+    function initiateToken(address __token) private pure returns(IERC20 initalized_token) {
         require(__token != address(0), "Invalid token");
         initalized_token = IERC20(__token);
     }
-
-
-
 
     /*
     * @dev: register().
     *
     * Creates a new user with initialized `_token`.
     */
-
-    function register(address _token) public isValidSender
-    {
+    function register(address _token) public isValidSender {
         IERC20 ini_token = initiateToken(_token);
         partners[msg.sender].token = ini_token;
     }
-    
-    
-    
     
     /*
     * @dev: registerPartner(address _token, address _partner).
@@ -111,9 +87,7 @@ contract TokenSwap
     *
     * The `msg.sender` has no created pairs yet.
     */
-
-    function registerPartner(address _partner) public isValidSender
-    {
+    function registerPartner(address _partner) public isValidSender {
         require(partners[msg.sender].partner == address(0), "You have a pair already, close it.");
         require(_partner != address(0), "Invalid partners address");
         require(msg.sender != _partner, "You cannot be your own partners");
@@ -122,9 +96,6 @@ contract TokenSwap
         partners[msg.sender].partner = _partner;
     }
     
-
-
-
     /*
     * @dev: acceptPair(address _address).
     *
@@ -132,17 +103,12 @@ contract TokenSwap
     * The `_address` here is the person who requested through registerPair().
     * The allowed is set to true.
     */
-
-    function acceptPair(address _address) public isValidSender
-    {
+    function acceptPair(address _address) public isValidSender {
         require(_address != address(0), "Address is invalid");
         require(partners[_address].partner == msg.sender, "You are not partnerss.");
 
         partners[_address].allowed = true;
     }
-
-
-
 
     /*
     * @dev: rejectPair(address _address).
@@ -151,17 +117,12 @@ contract TokenSwap
     * The `_address` here is the person who requested through registerPair().
     * The allowed is set to false.
     */
-    
-    function rejectPair(address _address) public isValidSender
-    {
+    function rejectPair(address _address) public isValidSender {
         require(_address != address(0), "Address is invalid");
         require(partners[_address].partner == msg.sender, "You are not partnerss.");
 
         partners[_address].allowed = false;
     }
-
-
-
 
     /*
     * @dev: swap(uint256 _amount1, uint256 _amount2).
@@ -173,9 +134,7 @@ contract TokenSwap
     * 
     * Make the transferFrom.
     */
-    
-    function swap(uint256 _amount1, uint256 _amount2) public isValidSender
-    {
+    function swap(uint256 _amount1, uint256 _amount2) public isValidSender {
         require(partners[msg.sender].partner != address(0), "You have no partner for this swap.");
         require(partners[msg.sender].allowed, "You are not allowed to.");
 
